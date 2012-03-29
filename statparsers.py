@@ -2,7 +2,7 @@
 
 import xml.etree.ElementTree as xml
 
-def showq_parser(data):
+def scinet_statparser(raw_data, userhash, cores_per_node):
     pass
 
 def mp2_statparser(raw_data, userhash, cores_per_node):
