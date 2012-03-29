@@ -23,13 +23,13 @@ class Cluster():
 
     def report_to_me(self):
         raw_data = self.executeCommand()
-        if self.name == 'scinet':
-            # rcu, qcu mean running & queuing core usages
-            rcu, q = statparsers.scinet_statparser(raw_data, self.userhash, self.cores_per_node)
-        elif self.name == 'mp2':
-            rcu, qcu = statparsers.mp2_statparser(raw_data, self.userhash, self.cores_per_node)
-        else:
-            raise ValueError("data format unrecognized.\ncmd: {0}".format(self.statcmd))
+        dd = {
+            'scinet': statparsers.scinet_statparser,
+            'mp2'   : statparsers.mp2_statparser,
+            }
+
+        # rcu, qcu mean running & queuing core usages
+        rcu, qcu = dd[self.name](raw_data, self.userhash, self.cores_per_node)
 
         self.display(rcu, qcu)
 
