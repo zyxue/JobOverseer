@@ -49,7 +49,8 @@ class Cluster():
         # print value
         for k in sorted_keys:
             # full name is too long, last name is used, firstname is confusing
-            name = k.split()[1] 
-            print "{0:13s} {1:<8d} {2:<8d} {3:<8d}".format(
-                name, rcu.get(k, 0), qcu.get(k, 0), total_usage[k])
+            if total_usage[k] != 0:                # don't print results of zero usage
+                name = k.split()[0]
+                print "{0:13s} {1:<8d} {2:<8d} {3:<8d}".format(
+                    name, rcu.get(k, 0), qcu.get(k, 0), total_usage[k])
                              
