@@ -2,6 +2,19 @@
 
 import xml.etree.ElementTree as xml
 
+def target_statparser(hostname):
+    statparsers_dd = {
+        'scinet'    : scinet_statparser,
+        'mp2'       : mp2_statparser,
+        'guillimin' : guillimin_statparser,
+        'lattice'   : lattice_statparser,
+        'orca'      : orca_statparser,
+        'nestor'    : nestor_statparser,
+        'colosse'   : colosse_statparser,
+        }
+    return statparsers_dd[hostname]
+
+
 def scinet_statparser(raw_data, userhash, cores_per_node):
     raw_data = xml.fromstring(raw_data)
 
@@ -127,3 +140,4 @@ def display_active_usage(active_cores, total_cores):
     print "this NUMBER is NOT ACURATE on mp2, scinet, guillimin, colosse, lattice, \nonly orca is ok" 
     print "=" * 44
     print 
+

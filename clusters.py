@@ -23,18 +23,9 @@ class Cluster():
 
     def report_to_me(self):
         raw_data = self.executeCommand()
-        dd = {
-            'scinet'    : statparsers.scinet_statparser,
-            'mp2'       : statparsers.mp2_statparser,
-            'guillimin' : statparsers.guillimin_statparser,
-            'lattice'   : statparsers.lattice_statparser,
-            'orca'      : statparsers.orca_statparser,
-            'nestor'   : statparsers.nestor_statparser,
-            'colosse'   : statparsers.colosse_statparser,
-            }
 
         # rcu, qcu mean running & queuing core usages
-        rcu, qcu = dd[self.name](raw_data, self.userhash, self.cores_per_node)
+        rcu, qcu = statparsers.target_statparser(self.name)(raw_data, self.userhash, self.cores_per_node)
 
         self.display(rcu, qcu)
 
