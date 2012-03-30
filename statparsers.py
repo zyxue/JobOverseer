@@ -63,6 +63,10 @@ def guillimin_statparser(raw_data, userhash, cores_per_node):
     rcu, qcu = scinet_statparser(raw_data, userhash, cores_per_node)
     return rcu, qcu
 
+def lattice_statparser(raw_data, userhash, cores_per_node):
+    rcu, qcu = scinet_statparser(raw_data, userhash, cores_per_node)
+    return rcu, qcu
+
 def init_cu(userhash):
     rcu = {}                    # collect cores usage by running jobs
     qcu = {}                    # collect cores usage by queueing cores
@@ -76,6 +80,6 @@ def display_active_usage(active_cores, total_cores):
     print "Active cores {0} / {1} = {2:.2%}".format(active_cores, total_cores, 
                                                 active_cores / float(total_cores))
     print 
-    print "this NUMBER is NOT ACURATE on mp2, scinet, guillimin" 
+    print "this NUMBER is NOT ACURATE on mp2, scinet, guillimin, lattice" 
     print "=" * 44
     print 

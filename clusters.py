@@ -27,6 +27,7 @@ class Cluster():
             'scinet'    : statparsers.scinet_statparser,
             'mp2'       : statparsers.mp2_statparser,
             'guillimin' : statparsers.guillimin_statparser,
+            'lattice'   : statparsers.lattice_statparser,
             }
 
         # rcu, qcu mean running & queuing core usages
