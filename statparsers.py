@@ -59,6 +59,35 @@ def mp2_statparser(raw_data, userhash, cores_per_node):
     display_active_usage(active_cores, total_cores)
     return rcu, qcu
 
+
+def colosse_statparser(raw_data, userhash, cores_per_node):
+    raw_data = xml.fromstring(raw_data)
+    # raw_data = xml.fromstring(result.translate(None, "&")) 
+    # the above line is from cing
+    active_cores, total_cores = 0, 0
+    rcu, qcu = init_cu(userhash)
+
+    for queue in raw_data:
+        for job in queue.findall('job_list'):
+            # collect global statitics
+            cores = int(job.find('slots').text) # no need to times number of nodes
+            job_state = job.find('state').text
+            if job_state == 'r':
+                active_cores += cores
+            total_cores += cores
+
+            # collect statistics for my group
+            job_owner = job.find('JB_owner').text
+            if job_owner in userhash:
+                realname = userhash[job_owner]
+                if job_state == 'r':
+                    rcu[realname] += cores
+                else:
+                    qcu[realname] += cores
+
+    display_active_usage(active_cores, total_cores)
+    return rcu, qcu
+
 def guillimin_statparser(raw_data, userhash, cores_per_node):
     rcu, qcu = scinet_statparser(raw_data, userhash, cores_per_node)
     return rcu, qcu
@@ -88,6 +117,6 @@ def display_active_usage(active_cores, total_cores):
     print "Active cores {0} / {1} = {2:.2%}".format(active_cores, total_cores, 
                                                 active_cores / float(total_cores))
     print 
-    print "this NUMBER is NOT ACURATE on mp2, scinet, guillimin, lattice, \norca is ok" 
+    print "this NUMBER is NOT ACURATE on mp2, scinet, guillimin, colosse, lattice, \nonly orca is ok" 
     print "=" * 44
     print 
