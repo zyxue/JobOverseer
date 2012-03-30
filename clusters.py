@@ -29,6 +29,7 @@ class Cluster():
             'guillimin' : statparsers.guillimin_statparser,
             'lattice'   : statparsers.lattice_statparser,
             'orca'      : statparsers.orca_statparser,
+            'nestor'   : statparsers.nestor_statparser,
             }
 
         # rcu, qcu mean running & queuing core usages
