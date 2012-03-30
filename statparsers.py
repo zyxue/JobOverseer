@@ -59,6 +59,9 @@ def mp2_statparser(raw_data, userhash, cores_per_node):
     display_active_usage(active_cores, total_cores)
     return rcu, qcu
 
+def guillimin_statparser(raw_data, userhash, cores_per_node):
+    rcu, qcu = scinet_statparser(raw_data, userhash, cores_per_node)
+    return rcu, qcu
 
 def init_cu(userhash):
     rcu = {}                    # collect cores usage by running jobs
@@ -73,6 +76,6 @@ def display_active_usage(active_cores, total_cores):
     print "Active cores {0} / {1} = {2:.2%}".format(active_cores, total_cores, 
                                                 active_cores / float(total_cores))
     print 
-    print "THIS NUMBER IS NOT ACURATE ON mp2, scinet" 
+    print "this NUMBER is NOT ACURATE on mp2, scinet, guillimin" 
     print "=" * 44
     print 

@@ -24,8 +24,9 @@ class Cluster():
     def report_to_me(self):
         raw_data = self.executeCommand()
         dd = {
-            'scinet': statparsers.scinet_statparser,
-            'mp2'   : statparsers.mp2_statparser,
+            'scinet'    : statparsers.scinet_statparser,
+            'mp2'       : statparsers.mp2_statparser,
+            'guillimin' : statparsers.guillimin_statparser,
             }
 
         # rcu, qcu mean running & queuing core usages
