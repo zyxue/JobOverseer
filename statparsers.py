@@ -67,6 +67,10 @@ def lattice_statparser(raw_data, userhash, cores_per_node):
     rcu, qcu = scinet_statparser(raw_data, userhash, cores_per_node)
     return rcu, qcu
 
+def nestor_statparser(raw_data, userhash, cores_per_node):
+    rcu, qcu = scinet_statparser(raw_data, userhash, cores_per_node)
+    return rcu, qcu
+
 def init_cu(userhash):
     rcu = {}                    # collect cores usage by running jobs
     qcu = {}                    # collect cores usage by queueing cores
