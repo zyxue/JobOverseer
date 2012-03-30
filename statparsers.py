@@ -34,23 +34,30 @@ def scinet_statparser(raw_data, userhash, cores_per_node):
 
 def mp2_statparser(raw_data, userhash, cores_per_node):
     raw_data = xml.fromstring(raw_data)
-    # raw_data = xml.fromstring(result.translate(None, "&")) 
-    # the above line is from cing
+    # raw_data = xml.fromstring(result.translate(None, "&")) ? 
+    # the above line is from cing, not sure when to use
+
+    active_cores, total_cores = 0, 0
+    rcu, qcu = init_cu(userhash)
 
     total_cores = sum([int(job.find('Resource_List').find("nodes").text.split(':')[0]) for job in raw_data])
     active_cores = sum([int(job.find('Resource_List').find("nodes").text.split(':')[0]) for job in raw_data if job.find('job_state').text == 'R'])
 
-    rcu, qcu = init_cu(userhash)
     for job in raw_data:
+        # collect global statitics
+        # e.g. 1:ppn=1
+        cores = cores_per_node * int(job.find('Resource_List').find("nodes").text.split(':')[0])
+        job_state = job.find('job_state').text
+        # possible jobs status set(['Q', 'H', 'R'])
+        if job_state == 'R':
+            active_cores += cores
+        total_cores += cores
+
+        # collect statistics for my group
         # e.g. 'xuezhuyi@ip13.m'
         job_owner = job.find('Job_Owner').text.split('@')[0]
         if job_owner in userhash:                          # user in my group
             realname = userhash[job_owner]
-            # e.g. 1:ppn=1
-            cores = cores_per_node * int(job.find('Resource_List').find("nodes").text.split(':')[0])
-
-            # possible jobs status set(['Q', 'H', 'R'])
-            job_state = job.find('job_state').text
             if job_state == 'R':
                 rcu[realname] += cores
             else:
