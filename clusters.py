@@ -4,10 +4,16 @@ import subprocess
 import statparsers
 
 class Cluster():
-    def __init__(self, name, cores_per_node, statcmd, userhash):
+    def __init__(self, name, usermap, cores_per_node, statcmd):
+	"""
+	name: name of the cluster
+	usermap: username-to-realname mapping
+	cores_per_node
+	statcmd: the command used to generate usage statics, probably in xml
+	"""
         self.name = name
+        self.usermap = usermap
         self.cores_per_node = int(cores_per_node)
-        self.userhash = userhash
         self.statcmd = statcmd
         self.queue_data = None
 
@@ -34,14 +40,14 @@ class Cluster():
             }
 
         # rcu, qcu mean running & queuing core usages
-        rcu, qcu = dd[self.name](raw_data, self.userhash, self.cores_per_node)
+        rcu, qcu = dd[self.name](raw_data, self.usermap, self.cores_per_node)
 
         self.display(rcu, qcu)
 
     def display(self, rcu, qcu):
         # result is a tuple
         total_usage = {}
-        for realname in set(self.userhash.values()):
+        for realname in set(self.usermap.values()):
             total_usage[realname] = sum(dd.get(realname, 0) for dd in [rcu, qcu])
 
         # print title
