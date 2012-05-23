@@ -4,15 +4,13 @@ import subprocess
 import statparsers
 
 class Cluster():
-    def __init__(self, name, usermap, cores_per_node, statcmd):
+    def __init__(self, name, cores_per_node, statcmd):
 	"""
 	name: name of the cluster
-	usermap: username-to-realname mapping
 	cores_per_node
 	statcmd: the command used to generate usage statics, probably in xml
 	"""
         self.name = name
-        self.usermap = usermap
         self.cores_per_node = int(cores_per_node)
         self.statcmd = statcmd
         self.queue_data = None
@@ -27,7 +25,8 @@ class Cluster():
                 "\ncmd failed: {0}\nstderr: {1}".format(self.statcmd, stderr))
         return stdout
 
-    def report_to_me(self):
+    def report_to_me(self, usermap):
+	"""usermap: username-to-realname mapping"""
         raw_data = self.executeCommand()
         dd = {
             'scinet'    : statparsers.scinet_statparser,
@@ -40,14 +39,13 @@ class Cluster():
             }
 
         # rcu, qcu mean running & queuing core usages
-        rcu, qcu = dd[self.name](raw_data, self.usermap, self.cores_per_node)
+        rcu, qcu = dd[self.name](raw_data, usermap, self.cores_per_node)
+        self.display(rcu, qcu, usermap)
 
-        self.display(rcu, qcu)
-
-    def display(self, rcu, qcu):
+    def display(self, rcu, qcu, usermap):
         # result is a tuple
         total_usage = {}
-        for realname in set(self.usermap.values()):
+        for realname in set(usermap.values()):
             total_usage[realname] = sum(dd.get(realname, 0) for dd in [rcu, qcu])
 
         # print title
@@ -64,4 +62,3 @@ class Cluster():
                 name = k.split()[0]
                 print "{0:13s} {1:<8d} {2:<8d} {3:<8d}".format(
                     name, rcu.get(k, 0), qcu.get(k, 0), total_usage[k])
-                             
