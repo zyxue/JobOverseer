@@ -51,8 +51,10 @@ class Cluster():
             total_usage[realname] = sum(dd.get(realname, 0) for dd in [rcu, qcu])
 
         # print title
-        print "{0:13s} {1:8s} {2:8s} {3:8s}\n{4:36s}".format(
-                'USERNAME', 'Running', 'Queuing', 'TOTAL', "=" * 44)
+        print "{0:13s} {1:8s} {2:8s} {3:8s}".format(
+                'USERNAME', 'Running', 'Queuing', 'TOTAL')
+
+        print '=' * 44
 
         # sort by total_usage
         sorted_keys = reversed(sorted(total_usage, key=total_usage.get))
@@ -64,6 +66,12 @@ class Cluster():
                 name = k.split()[0]
                 print "{0:13s} {1:<8d} {2:<8d} {3:<8d}".format(
                     name, rcu.get(k, 0), qcu.get(k, 0), total_usage[k])
+
+        print '=' * 44
+        print "{0:13s} {1:<8d} {2:<8d} {3:<8d}".format(
+            'SUM', sum(rcu.values()), sum(qcu.values()), sum(total_usage.values()))
+        print '=' * 44
+
     def canceljobs(self, filter):
 	"""filter should be regular expression"""
         raw_xml_data = self.executeCommand()

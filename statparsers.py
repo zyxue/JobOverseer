@@ -127,3 +127,4 @@ def display_active_usage(active_cores, total_cores):
     print "this NUMBER is NOT ACURATE on mp2, scinet, guillimin, colosse, lattice, \nonly orca is ok" 
     print "=" * 44
     print 
+
