@@ -6,7 +6,11 @@ import xml.dom.minidom as xdm
 import clusters
 
 def identify_cluster(hostname):
-    dom = xdm.parse('clusters.xml')
+    # I should find a way to identify the location of clusters.xml,
+    # clusters.xml should be rewritten using more of attributes based on the
+    # xml from statcmd
+
+    dom = xdm.parse(os.path.expanduser('~/local/ZXeller/JobOverseer/clusters.xml'))
     hns_nodes = dom.getElementsByTagName("hostnames") # hn: hostname
     for node in hns_nodes:
 	hns = [i.childNodes[0].data for i in node.getElementsByTagName("hn")]
@@ -19,8 +23,8 @@ def identify_cluster(hostname):
 	    return cluster_obj
 
 def user_mapping():
-    dom = xdm.parse('users.xml')
-    users = dom.getElementsByTagName("username")
+    dom = xdm.parse(os.path.expanduser('~/local/ZXeller/JobOverseer/users.xml'))
+    users = dom.getElementsByTagName('username')
     return {u.childNodes[0].data: u.nextSibling.childNodes[0].data for u in users}
 
 if __name__ == "__main__":

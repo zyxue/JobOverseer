@@ -2,13 +2,13 @@
 
 import xml.etree.ElementTree as xml
 
-def scinet_statparser(raw_data, userhash, cores_per_node):
-    raw_data = xml.fromstring(raw_data)
+def scinet_statparser(raw_xml_data, userhash, cores_per_node):
+    xml_data = xml.fromstring(raw_xml_data)
 
     active_cores, total_cores = 0, 0
     rcu, qcu = init_cu(userhash)
 
-    queues = raw_data.findall('queue')
+    queues = xml_data.findall('queue')
     for queue in queues:
         for job in queue.findall('job'):
             # collect global statitics
@@ -32,18 +32,18 @@ def scinet_statparser(raw_data, userhash, cores_per_node):
 
     return rcu, qcu
 
-def mp2_statparser(raw_data, userhash, cores_per_node):
-    raw_data = xml.fromstring(raw_data)
-    # raw_data = xml.fromstring(result.translate(None, "&")) ? 
+def mp2_statparser(raw_xml_data, userhash, cores_per_node):
+    xml_data = xml.fromstring(raw_xml_data)
+    # xml_data = xml.fromstring(result.translate(None, "&")) ? 
     # the above line is from cing, not sure when to use
 
     active_cores, total_cores = 0, 0
     rcu, qcu = init_cu(userhash)
 
-    total_cores = sum([int(job.find('Resource_List').find("nodes").text.split(':')[0]) for job in raw_data])
-    active_cores = sum([int(job.find('Resource_List').find("nodes").text.split(':')[0]) for job in raw_data if job.find('job_state').text == 'R'])
+    total_cores = sum([int(job.find('Resource_List').find("nodes").text.split(':')[0]) for job in xml_data])
+    active_cores = sum([int(job.find('Resource_List').find("nodes").text.split(':')[0]) for job in xml_data if job.find('job_state').text == 'R'])
 
-    for job in raw_data:
+    for job in xml_data:
         # collect global statitics
         # e.g. 1:ppn=1
         cores = cores_per_node * int(job.find('Resource_List').find("nodes").text.split(':')[0])
@@ -67,14 +67,14 @@ def mp2_statparser(raw_data, userhash, cores_per_node):
     return rcu, qcu
 
 
-def colosse_statparser(raw_data, userhash, cores_per_node):
-    raw_data = xml.fromstring(raw_data)
-    # raw_data = xml.fromstring(result.translate(None, "&")) 
+def colosse_statparser(raw_xml_data, userhash, cores_per_node):
+    xml_data = xml.fromstring(raw_xml_data)
+    # xml_data = xml.fromstring(result.translate(None, "&")) 
     # the above line is from cing
     active_cores, total_cores = 0, 0
     rcu, qcu = init_cu(userhash)
 
-    for queue in raw_data:
+    for queue in xml_data:
         for job in queue.findall('job_list'):
             # collect global statitics
             cores = int(job.find('slots').text) # no need to times number of nodes
@@ -95,20 +95,20 @@ def colosse_statparser(raw_data, userhash, cores_per_node):
     display_active_usage(active_cores, total_cores)
     return rcu, qcu
 
-def guillimin_statparser(raw_data, userhash, cores_per_node):
-    rcu, qcu = scinet_statparser(raw_data, userhash, cores_per_node)
+def guillimin_statparser(raw_xml_data, userhash, cores_per_node):
+    rcu, qcu = scinet_statparser(raw_xml_data, userhash, cores_per_node)
     return rcu, qcu
 
-def lattice_statparser(raw_data, userhash, cores_per_node):
-    rcu, qcu = scinet_statparser(raw_data, userhash, cores_per_node)
+def lattice_statparser(raw_xml_data, userhash, cores_per_node):
+    rcu, qcu = scinet_statparser(raw_xml_data, userhash, cores_per_node)
     return rcu, qcu
 
-def orca_statparser(raw_data, userhash, cores_per_node):
-    rcu, qcu = scinet_statparser(raw_data, userhash, cores_per_node)
+def orca_statparser(raw_xml_data, userhash, cores_per_node):
+    rcu, qcu = scinet_statparser(raw_xml_data, userhash, cores_per_node)
     return rcu, qcu
 
-def nestor_statparser(raw_data, userhash, cores_per_node):
-    rcu, qcu = scinet_statparser(raw_data, userhash, cores_per_node)
+def nestor_statparser(raw_xml_data, userhash, cores_per_node):
+    rcu, qcu = scinet_statparser(raw_xml_data, userhash, cores_per_node)
     return rcu, qcu
 
 def init_cu(userhash):

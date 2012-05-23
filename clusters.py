@@ -1,7 +1,9 @@
 import os
 import sys
 import subprocess
+
 import statparsers
+import jidfilters
 
 class Cluster():
     def __init__(self, name, cores_per_node, statcmd):
@@ -27,7 +29,7 @@ class Cluster():
 
     def report_to_me(self, usermap):
 	"""usermap: username-to-realname mapping"""
-        raw_data = self.executeCommand()
+        raw_xml_data = self.executeCommand()
         dd = {
             'scinet'    : statparsers.scinet_statparser,
             'mp2'       : statparsers.mp2_statparser,
@@ -39,7 +41,7 @@ class Cluster():
             }
 
         # rcu, qcu mean running & queuing core usages
-        rcu, qcu = dd[self.name](raw_data, usermap, self.cores_per_node)
+        rcu, qcu = dd[self.name](raw_xml_data, usermap, self.cores_per_node)
         self.display(rcu, qcu, usermap)
 
     def display(self, rcu, qcu, usermap):
@@ -62,3 +64,25 @@ class Cluster():
                 name = k.split()[0]
                 print "{0:13s} {1:<8d} {2:<8d} {3:<8d}".format(
                     name, rcu.get(k, 0), qcu.get(k, 0), total_usage[k])
+    def canceljobs(self, filter):
+	"""filter should be regular expression"""
+        raw_xml_data = self.executeCommand()
+        dd = {
+            'scinet'    : jidfilters.scinet_jidfilter,
+            'mp2'       : jidfilters.mp2_jidfilter,
+            'guillimin' : jidfilters.guillimin_jidfilter,
+            'lattice'   : jidfilters.lattice_jidfilter,
+            'orca'      : jidfilters.orca_jidfilter,
+            'nestor'   : jidfilters.nestor_jidfilter,
+            'colosse'   : jidfilters.colosse_jidfilter,
+            }
+
+	print "=" * 79
+	print "{0:^79s}".format("THE SPECIFIED FILTER: " + filter)
+	print "=" * 79
+        jids_jns = dd[self.name](raw_xml_data, filter)
+	# a list of [jobid, jobname]
+	# jobname is there for convenient reference
+	for [jid, jn] in jids_jns:
+	    print "{0:^79s}".format("{0}\t{1}".format(jid, jn))
+	    subprocess.call(['canceljob', jid])
