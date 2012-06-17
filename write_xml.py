@@ -16,21 +16,31 @@ def write_clusters(doc, outputfile):
 	["scinet", 8, "/usr/local/bin/showq --format=xml",
 	 ["gpc-f101n084", "gpc-f102n084", "gpc-f103n084", "gpc-f104n084", "gpc-logindm01"]
 	 ],
+
 	["mp2", 24, "/opt/torque/bin/qstat -x",
 	 ["ip13", "cp2540", "ip14"]
 	 ],
+
 	["guillimin", 12, "/opt/moab/bin/showq --format=xml",
 	 ["lg-1r14-n01", "lg-1r14-n02", "lg-1r14-n03", "lg-1r14-n04", "lg-1r14-n05"]
 	 ],
+
 	["lattice", 8, "/usr/local/moab/bin/showq --format=xml",
 	 ["lattice"]
 	 ],
+
 	["orca", 24, "/opt/sharcnet/moab/6.1.3/bin/showq --format=xml",
 	 ["orc-login1", "orc-login2"]
 	 ],
+
 	["nestor", 8, "/opt/bin/qstat -x",
 	 ["litai05.westgrid.ca"]
 	 ],
+
+        ["colosse", 8, "/opt/moab/bin/showq --format=xml",
+         ["colosse1", "colosse2"]
+         ]
+
 	]
 
     tags = ["clustername", "cores-per-node", "statcmd"]
