@@ -120,11 +120,12 @@ def init_cu(userhash):
     return rcu, qcu
 
 def display_active_usage(active_cores, total_cores):
-    print "=" * 44
-    print "Active cores {0} / {1} = {2:.2%}".format(active_cores, total_cores, 
-                                                active_cores / float(total_cores))
-    print 
-    print "this NUMBER is NOT ACURATE on mp2, scinet, guillimin, colosse, lattice, \nonly orca is ok" 
-    print "=" * 44
-    print 
+    if total_cores != 0:
+        print "=" * 44
+        print "Active cores {0} / {1} = {2:.2%}".format(
+            active_cores, total_cores, active_cores / float(total_cores))
+        print 
+        print "this NUMBER is NOT ACURATE on mp2, scinet, guillimin, colosse, lattice, \nonly orca is ok" 
+        print "=" * 44
+        print 
 
