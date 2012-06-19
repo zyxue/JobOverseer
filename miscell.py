@@ -5,7 +5,7 @@ import xml.dom.minidom as xdm
 
 import clusters
 
-def identify_cluster(hostname):
+def gen_cluster_obj(hostname):
     # I should find a way to identify the location of clusters.xml,
     # clusters.xml should be rewritten using more of attributes based on the
     # xml from statcmd
@@ -31,5 +31,5 @@ if __name__ == "__main__":
     from pprint import pprint as pp
 
     hostname = os.environ['HOSTNAME']	# hn: hostname
-    pp(identify_cluster(hostname))
+    pp(gen_cluster_obj(hostname))
     pp(user_mapping())
